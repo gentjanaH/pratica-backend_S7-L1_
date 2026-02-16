@@ -2,6 +2,7 @@ package gentjanahani.u2w3d1.security;
 
 
 import gentjanahani.u2w3d1.entities.Dipendente;
+import gentjanahani.u2w3d1.exceptions.UnautorizedException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,5 +22,13 @@ public class CreateAndVerify {
                 .subject(String.valueOf(dipendente.getIdDipendente()))//a chi appartiene
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))//firmo il token fornendoli il segreto
                 .compact();
+    }
+
+    public void verifyToken(String token){
+        try{
+            Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parse(token);
+        }catch (Exception exception){
+            throw new UnautorizedException("Si è verificato un problema. Riprova.");
+        }
     }
 }
