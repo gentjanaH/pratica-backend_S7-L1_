@@ -3,6 +3,7 @@ package gentjanahani.u2w3d1.security;
 
 import gentjanahani.u2w3d1.entities.Dipendente;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,8 @@ public class CreateAndVerify {
         return Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis()))//data di emissione in millisecondi
                 .expiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 60 * 24 * 7))//data di scadenza
-                .subject(String.valueOf(dipendente.getIdDipendente()))
+                .subject(String.valueOf(dipendente.getIdDipendente()))//a chi appartiene
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))//firmo il token fornendoli il segreto
+                .compact();
     }
 }
