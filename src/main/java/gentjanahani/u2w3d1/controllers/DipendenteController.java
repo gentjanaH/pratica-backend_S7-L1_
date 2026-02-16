@@ -3,6 +3,7 @@ package gentjanahani.u2w3d1.controllers;
 import gentjanahani.u2w3d1.entities.Dipendente;
 import gentjanahani.u2w3d1.exceptions.ValidationException;
 import gentjanahani.u2w3d1.payloads.DipendenteDTO;
+import gentjanahani.u2w3d1.payloads.UpdateDipendenteDTO;
 import gentjanahani.u2w3d1.services.DipendenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,33 @@ public class DipendenteController {
             return this.dipendenteService.save(payload);
         }
     }
+
+    // http://localhost:3026/dipendenti/{idDipendente}
+    @PutMapping("/{idDipendente}")
+    public DipendenteDTO getAndUpdate(@PathVariable UUID idDipendente, @RequestBody UpdateDipendenteDTO payload){
+        Dipendente aggiornato =dipendenteService.updateDipendente(idDipendente,payload);
+        return new DipendenteDTO(aggiornato);
+    }
+
+
+    @GetMapping
+    public List<Dipendente> getDipendenti(){
+        return  this.dipendenteService.getAllDipendenti();
+    }
+
+    @GetMapping("/{idDipendente}")
+    public DipendenteDTO getDipendente(@PathVariable UUID idDipendente){
+        Dipendente dipendente=dipendenteService.findDipendenteById(idDipendente);
+        return  new DipendenteDTO(dipendente);
+    }
+
+    // http://localhost:3026/dipendenti/{idDipendente}
+    @DeleteMapping("/{idDipendente}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void findAndDelete(@PathVariable UUID idDipendente){
+        dipendenteService.findAndDelete(idDipendente);
+    }
+    
 
     // 2. PATCH http://localhost:3026/dipendenti/{idDipendente}
     @PatchMapping("/{idDipendente}/avatar")

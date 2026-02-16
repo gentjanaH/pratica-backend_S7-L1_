@@ -6,6 +6,7 @@ import gentjanahani.u2w3d1.entities.Dipendente;
 import gentjanahani.u2w3d1.exceptions.BadRequestException;
 import gentjanahani.u2w3d1.exceptions.NotFoundException;
 import gentjanahani.u2w3d1.payloads.DipendenteDTO;
+import gentjanahani.u2w3d1.payloads.UpdateDipendenteDTO;
 import gentjanahani.u2w3d1.repository.DipendenteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -56,6 +58,31 @@ public class DipendenteService {
 
     public Dipendente findByEmail(String mail){
         return this.dipendenteRepository.findByEmail(mail).orElseThrow(()->new NotFoundException("Il dipendente con email " + mail + " non è stato trovato."));
+    }
+
+    public Dipendente updateDipendente(UUID idDipendente, UpdateDipendenteDTO payload){
+        Dipendente dipModificato=findDipendenteById(idDipendente);
+
+        this.dipendenteRepository.findByUsername(payload.username()).ifPresent(dipentente -> {
+            if(!dipentente.getIdDipendente().equals(idDipendente)){
+                throw new BadRequestException("Lo username" + dipentente.getUsername() + "  è già in uso!");
+            }
+        });
+        dipModificato.setName(payload.name());
+        dipModificato.setSurname(payload.surname());
+        dipModificato.setUsername(payload.username());
+
+        return dipendenteRepository.save(dipModificato);
+    }
+
+    public List<Dipendente> getAllDipendenti(){
+        return dipendenteRepository.findAll();
+    }
+
+    public void findAndDelete(UUID idDipendente){
+        Dipendente dipendente=findDipendenteById(idDipendente);
+
+        dipendenteRepository.delete(dipendente);
     }
 
     public Dipendente uploadAvatar(UUID idDipendente, MultipartFile file) {

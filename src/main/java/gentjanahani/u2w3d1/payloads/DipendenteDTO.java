@@ -1,5 +1,6 @@
 package gentjanahani.u2w3d1.payloads;
 
+import gentjanahani.u2w3d1.entities.Dipendente;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -23,4 +24,12 @@ public record DipendenteDTO(
         @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{4,}$", message = "La password deve contenere una maiuscola, una minuscola e almeno un carattere speciale")
         String password
 ) {
+        public DipendenteDTO (Dipendente dipendente){
+             this(
+                     dipendente.getUsername(),
+                     dipendente.getName(),
+                     dipendente.getSurname(),
+                     dipendente.getEmail(),
+                     dipendente.getPassword());
+        }
 }
