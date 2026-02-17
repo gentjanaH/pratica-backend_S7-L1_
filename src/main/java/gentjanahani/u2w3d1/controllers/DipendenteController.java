@@ -67,7 +67,7 @@ public class DipendenteController {
     public void findAndDelete(@PathVariable UUID idDipendente){
         dipendenteService.findAndDelete(idDipendente);
     }
-    
+
 
     // 2. PATCH http://localhost:3026/dipendenti/{idDipendente}
     @PatchMapping("/{idDipendente}/avatar")
